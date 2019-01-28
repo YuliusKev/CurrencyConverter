@@ -1,0 +1,7 @@
+export const GET_CURRENCY_LIST = "GET_CURRENCY_LIST";
+export const GET_CURRENCY_LIST_SUCCESS = "GET_CURRENCY_LIST_SUCCESS";
+export const GET_CURRENCY_LIST_FAILED = "GET_CURRENCY_LIST_FAILED";
+
+export const getCurrencyList = () => ({
+  type: GET_CURRENCY_LIST
+});
