@@ -33,6 +33,18 @@ class Home extends Component {
     this.props.dispatch(getCurrencyList());
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.quoteCurrency !== prevProps.quoteCurrency) {
+      this.props.dispatch(
+        getBaseCurrency(
+          this.state.baseValue,
+          this.state.baseCurrency,
+          this.props.quoteCurrency
+        )
+      );
+    }
+  }
+
   sendRequest = ({ amount, base, quote }) => {
     //console.log(`${amount} on ${base} changed to ${quote}`);
     // console.log(amount);
@@ -59,6 +71,7 @@ class Home extends Component {
   popUpShown = () => {
     this.props.dispatch(changeVisibility());
   };
+
   render() {
     return (
       <View style={styles.container}>
