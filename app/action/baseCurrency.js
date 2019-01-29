@@ -3,6 +3,7 @@ export const GET_QUOTE_CURRENCY = "GET_QUOTE_CURRENCY";
 export const GET_BASE_CURRENCY_SUCCESS = "GET_BASE_CURRENCY_SUCCESS";
 export const GET_BASE_CURRENCY_FAILED = "GET_BASE_CURRENCY_FAILED";
 export const MULTIPLY_BY_ITSELF = "MULTIPLY_BY_ITSELF";
+export const CLEAR_DATA = "CLEAR_DATA";
 
 export const getBaseCurrency = (amount, baseCurrency, quoteCurrency) => ({
   type: GET_BASE_CURRENCY,
@@ -19,4 +20,8 @@ export const getQuoteCurrency = quoteCurrency => ({
 export const multiplyByItself = value => ({
   type: MULTIPLY_BY_ITSELF,
   value
+});
+
+export const clearData = () => ({
+  type: CLEAR_DATA
 });

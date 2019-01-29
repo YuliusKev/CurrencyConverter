@@ -12,7 +12,7 @@ const QuoteCurrency = ({ initialValue, currency, onPress }) => {
   return (
     <View style={styles.container}>
       <TextInput
-        value={initialValue.toString()}
+        value={initialValue}
         style={styles.textInput}
         keyboardType="number-pad"
         returnKeyType="done"

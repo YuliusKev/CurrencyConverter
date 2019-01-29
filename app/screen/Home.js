@@ -7,18 +7,19 @@ import BaseCurrency from "../components/InputText/BaseCurrency";
 import QuoteQurrency from "../components/InputText/QuoteCurrency";
 import PopUp from "../components/PopUp";
 
-//data
-import currencies from "../data/currencies";
-
 //importing action
-import { getBaseCurrency, multiplyByItself } from "../action/baseCurrency";
+import {
+  getBaseCurrency,
+  multiplyByItself,
+  clearData
+} from "../action/baseCurrency";
 import { getCurrencyList } from "../action/currenciesList";
+import { changeVisibility } from "../action/popUpActions";
 
 class Home extends Component {
   state = {
     baseValue: 100,
     baseCurrency: "USD",
-    quoteCurrency: "GBP",
     modalVisible: false
   };
   componentDidMount() {
@@ -26,7 +27,7 @@ class Home extends Component {
       getBaseCurrency(
         this.state.baseValue,
         this.state.baseCurrency,
-        this.state.quoteCurrency
+        this.props.quoteCurrency
       )
     );
     this.props.dispatch(getCurrencyList());
@@ -38,12 +39,6 @@ class Home extends Component {
     amount === ""
       ? this.props.dispatch(getBaseCurrency(1, base, quote))
       : this.props.dispatch(getBaseCurrency(amount, base, quote));
-
-    if (!this.props.data) {
-      console.log("null");
-    } else {
-      console.log(this.props.data.rates);
-    }
   };
 
   multiply = ({ value }) => {
@@ -55,18 +50,25 @@ class Home extends Component {
       this.sendRequest({
         amount: this.state.baseValue,
         base: this.state.baseCurrency,
-        quote: this.state.quoteCurrency
+        quote: this.props.quoteCurrency
       }),
-        this.multiply({ value: this.state.baseValue });
+        this.props.dispatch(clearData());
     });
+  };
+
+  popUpShown = () => {
+    this.props.dispatch(changeVisibility());
   };
   render() {
     return (
       <View style={styles.container}>
-        <PopUp
-          visibility={this.state.modalVisible}
-          onPress={() => this.setState({ modalVisible: false })}
-        />
+        {!this.props.currencies ? null : (
+          <PopUp
+            visibility={this.props.popUp}
+            currenciesData={Object.keys(this.props.currencies)}
+          />
+        )}
+
         <BaseCurrency
           initialValue={this.state.baseValue}
           changeValue={baseValue => this.baseValueOnChange(baseValue)}
@@ -75,13 +77,15 @@ class Home extends Component {
         {!this.props.data || this.state.baseValue === "" ? (
           <QuoteQurrency
             initialValue="..."
-            currency={this.state.quoteCurrency}
+            currency={this.props.quoteCurrency}
           />
         ) : (
           <QuoteQurrency
-            initialValue={this.props.data.rates[this.state.quoteCurrency]}
-            currency={this.state.quoteCurrency}
-            onPress={() => this.setState({ modalVisible: true })}
+            initialValue={this.props.data.rates[
+              this.props.quoteCurrency
+            ].toFixed(2)}
+            currency={this.props.quoteCurrency}
+            onPress={this.popUpShown}
           />
         )}
         <Text style={{ fontSize: 20 }}>{this.props.multiply}</Text>
@@ -101,8 +105,10 @@ const styles = EStyleSheet.create({
 const mapStateToProps = state => {
   return {
     data: state.baseCurrency.data,
-    reducer: state.currencyList.data,
-    multiply: state.baseCurrency.value
+    multiply: state.baseCurrency.value,
+    currencies: state.currencyList.data,
+    popUp: state.modalView.visible,
+    quoteCurrency: state.modalView.quoteCurrency
   };
 };
 

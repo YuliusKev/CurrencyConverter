@@ -1,25 +1,36 @@
 import React, { Component } from "react";
-import { Modal, View, TouchableOpacity } from "react-native";
+import { Modal, View, TouchableOpacity, FlatList, Text } from "react-native";
+import { connect } from "react-redux";
 
-const PopUp = ({ visibility, currencies, onPress }) => {
-  let modalVisible = visibility;
+//actions
+import { changeQuoteCurrency } from "../../action/popUpActions";
+import { clearData } from "../../action/baseCurrency";
 
-  const lel = ({ visibility }) => {
-    modalVisible = visibility;
-    console.log(modalVisible);
+const PopUp = props => {
+  const { visibility, currenciesData, dispatch } = props;
+
+  const panggil = item => {
+    dispatch(changeQuoteCurrency(item));
+    dispatch(clearData());
   };
+
   return (
-    <Modal animationType="slide" transparent={false} visible={modalVisible}>
+    <Modal animationType="slide" transparent={false} visible={visibility}>
       <View
         style={{ flex: 1, backgroundColor: "white", justifyContent: "center" }}
       >
-        <TouchableOpacity
-          style={{ height: 30, backgroundColor: "red" }}
-          onPress={onPress}
+        <FlatList
+          data={currenciesData}
+          keyExtractor={index => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => panggil(item)}>
+              <Text style={{ fontSize: 20 }}>{item}</Text>
+            </TouchableOpacity>
+          )}
         />
       </View>
     </Modal>
   );
 };
 
-export default PopUp;
+export default connect(null)(PopUp);

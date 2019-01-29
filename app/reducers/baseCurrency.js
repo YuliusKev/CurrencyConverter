@@ -2,12 +2,12 @@ import {
   GET_BASE_CURRENCY,
   GET_BASE_CURRENCY_FAILED,
   GET_BASE_CURRENCY_SUCCESS,
-  MULTIPLY_BY_ITSELF
+  MULTIPLY_BY_ITSELF,
+  CLEAR_DATA
 } from "../action/baseCurrency";
 
 const initialState = {
   loading: false,
-  quoteCurrency: "GBP",
   data: null,
   value: null,
   error: null
@@ -25,10 +25,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        data: {
-          ...action.result,
-          rates: { ...action.result.rates }
-        }
+        data: action.result
       };
     }
     case GET_BASE_CURRENCY_FAILED: {
@@ -42,6 +39,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         value: action.value * action.value
+      };
+    }
+    case CLEAR_DATA: {
+      return {
+        ...state,
+        data: null
       };
     }
     default:
